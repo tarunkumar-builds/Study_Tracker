@@ -3,6 +3,10 @@ node_modules/
 package-lock.json
 yarn.lock
 
+# CS
+CS.zip
+CS/
+
 # Environment variables
 .env
 .env.local
