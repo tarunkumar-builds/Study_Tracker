@@ -3,6 +3,11 @@ node_modules/
 package-lock.json
 yarn.lock
 
+#Documentation
+DEPLOYMENT.md
+PROJECT_SUMMARY.md
+README.md
+
 # CS
 CS.zip
 CS/
