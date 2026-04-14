@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Plus, RotateCcw, Trash2, Pencil } from 'lucide-react';
+import { Plus, RotateCcw, Trash2, Pencil, Clock3, Layers3 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import ProgressRing from '../components/ProgressRing';
 import { flashcardService } from '../services';
@@ -9,6 +9,45 @@ const defaultForm = {
   subjectId: '',
   question: '',
   answer: ''
+};
+
+const reviewActions = [
+  {
+    rating: 'again',
+    label: 'Again',
+    caption: 'Repeat soon',
+    className: 'bg-red-600/20 text-red-300 border border-red-500/30 hover:bg-red-600/30'
+  },
+  {
+    rating: 'good',
+    label: 'Good',
+    caption: 'Schedule normally',
+    className: 'bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-600/30'
+  },
+  {
+    rating: 'easy',
+    label: 'Easy',
+    caption: 'Push farther out',
+    className: 'bg-blue-600/20 text-blue-300 border border-blue-500/30 hover:bg-blue-600/30'
+  }
+];
+
+const formatRelativeReview = (value) => {
+  if (!value) return 'Not scheduled yet';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return 'Not scheduled yet';
+
+  const diffMs = date.getTime() - Date.now();
+  const diffMinutes = Math.round(diffMs / 60000);
+
+  if (diffMinutes <= 0) return 'Due now';
+  if (diffMinutes < 60) return `In ${diffMinutes}m`;
+
+  const diffHours = Math.round(diffMinutes / 60);
+  if (diffHours < 24) return `In ${diffHours}h`;
+
+  const diffDays = Math.round(diffHours / 24);
+  return `In ${diffDays}d`;
 };
 
 const Flashcards = () => {
@@ -50,8 +89,10 @@ const Flashcards = () => {
     loadData();
   }, [selectedSubjectId]);
 
-  const studyDeck = useMemo(() => dueCards.length ? dueCards : cards, [dueCards, cards]);
+  const studyDeck = useMemo(() => dueCards, [dueCards]);
   const currentCard = studyDeck[currentIndex] || null;
+  const hasDueCards = dueCards.length > 0;
+  const hasAnyCards = cards.length > 0;
 
   const openCreateModal = () => {
     if (!subjects.length) {
@@ -120,10 +161,7 @@ const Flashcards = () => {
     try {
       await flashcardService.review(currentCard._id, undefined, rating);
       toast.success(`Recorded: ${rating}`);
-      const next = currentIndex + 1;
-      setCurrentIndex(next < studyDeck.length ? next : 0);
-      setFlipped(false);
-      loadData();
+      await loadData();
     } catch {
       toast.error('Failed to record review');
     }
@@ -179,17 +217,36 @@ const Flashcards = () => {
           ))}
         </select>
         <p className="text-sm text-gray-400">
-          Studying {studyDeck.length} {studyDeck.length === 1 ? 'card' : 'cards'}
+          {hasDueCards
+            ? `Reviewing ${studyDeck.length} due ${studyDeck.length === 1 ? 'card' : 'cards'}`
+            : `${cards.length} total ${cards.length === 1 ? 'card' : 'cards'} in your deck`}
         </p>
       </div>
 
       {loading ? (
         <div className="card text-center py-20 text-gray-400">Loading flashcards...</div>
-      ) : !currentCard ? (
+      ) : !hasAnyCards ? (
         <div className="card text-center py-20">
           <p className="text-white text-lg font-semibold mb-2">No cards to review</p>
           <p className="text-gray-400 mb-4">Create flashcards to start spaced repetition.</p>
           <button onClick={openCreateModal} className="btn-primary">Create Flashcard</button>
+        </div>
+      ) : !currentCard ? (
+        <div className="card text-center py-20">
+          <p className="text-white text-lg font-semibold mb-2">No cards due right now</p>
+          <p className="text-gray-400 mb-6">
+            Your due queue is clear. Create more cards or come back when the next review is scheduled.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-300">
+            <div className="rounded-xl border border-dark-border bg-dark-bg px-4 py-3 min-w-[150px]">
+              <p className="text-gray-500 text-xs mb-1">Deck Size</p>
+              <p className="text-xl font-semibold text-white">{cards.length}</p>
+            </div>
+            <div className="rounded-xl border border-dark-border bg-dark-bg px-4 py-3 min-w-[150px]">
+              <p className="text-gray-500 text-xs mb-1">Due Today</p>
+              <p className="text-xl font-semibold text-white">{stats.dueCards || 0}</p>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="card">
@@ -226,12 +283,45 @@ const Flashcards = () => {
             </div>
           </button>
 
-          <div className="grid grid-cols-2 gap-2 mt-5">
-            <button onClick={() => handleReview('again')} className="rounded-lg py-2 bg-red-600/20 text-red-300 border border-red-500/30">
-              Again
-            </button>
-            <button onClick={handleNextCard} className="rounded-lg py-2 bg-primary-600/20 text-primary-300 border border-primary-500/30">
-              Next
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
+            {reviewActions.map((action) => (
+              <button
+                key={action.rating}
+                onClick={() => handleReview(action.rating)}
+                className={`rounded-lg px-4 py-3 transition-colors ${action.className}`}
+              >
+                <span className="block font-semibold">{action.label}</span>
+                <span className="block text-xs opacity-80 mt-1">{action.caption}</span>
+              </button>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-4">
+            <div className="rounded-xl border border-dark-border bg-dark-bg px-4 py-3">
+              <p className="text-xs text-gray-500 mb-1 flex items-center gap-2">
+                <Clock3 size={13} />
+                Next Review
+              </p>
+              <p className="text-sm font-semibold text-white">{formatRelativeReview(currentCard.nextReviewDate)}</p>
+            </div>
+            <div className="rounded-xl border border-dark-border bg-dark-bg px-4 py-3">
+              <p className="text-xs text-gray-500 mb-1 flex items-center gap-2">
+                <Layers3 size={13} />
+                Interval
+              </p>
+              <p className="text-sm font-semibold text-white">
+                {currentCard.interval || 0} {(currentCard.interval || 0) === 1 ? 'day' : 'days'}
+              </p>
+            </div>
+            <div className="rounded-xl border border-dark-border bg-dark-bg px-4 py-3">
+              <p className="text-xs text-gray-500 mb-1">Repetitions</p>
+              <p className="text-sm font-semibold text-white">{currentCard.repetitions || 0}</p>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <button onClick={handleNextCard} className="btn-secondary text-sm">
+              Skip Card
             </button>
           </div>
         </div>

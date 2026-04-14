@@ -13,41 +13,51 @@ const syllabus = [
       {
         title: 'Linear Algebra',
         topics: [
-          'Systems of linear equations (Gaussian elimination)',
+          'Matrices and Matrix Operations',
+          'Determinants',
+          'Rank of a Matrix',
           'Eigenvalues and Eigenvectors',
-          'Rank of matrix',
-          'LU decomposition',
-          'Vector spaces and linear independence'
+          'System of Linear Equations'
         ]
       },
       {
         title: 'Calculus',
         topics: [
-          'Limits and continuity',
-          'Differentiation and applications',
-          'Maxima and minima',
-          'Partial derivatives',
-          'Multiple integrals'
+          'Limits and Continuity',
+          'Differentiation',
+          'Applications of Derivatives',
+          'Integration',
+          'Multiple Integrals'
         ]
       },
       {
-        title: 'Probability',
+        title: 'Probability and Statistics',
         topics: [
-          'Conditional probability',
-          'Bayes theorem',
-          'Random variables',
-          'Probability distributions',
-          'Expectation and variance'
+          'Probability Basics',
+          'Random Variables',
+          'Probability Distributions',
+          'Expectation and Variance',
+          'Hypothesis Testing'
+        ]
+      },
+      {
+        title: 'Differential Equations',
+        topics: [
+          'First Order Differential Equations',
+          'Higher Order Linear Differential Equations',
+          'Homogeneous and Non-homogeneous Equations',
+          'Method of Variation of Parameters',
+          'Laplace Transform Applications'
         ]
       },
       {
         title: 'Discrete Mathematics',
         topics: [
-          'Propositional logic',
-          'Set theory',
-          'Relations and functions',
-          'Graph theory basics',
-          'Recurrence relations'
+          'Set Theory',
+          'Relations and Functions',
+          'Mathematical Logic',
+          'Combinatorics',
+          'Graph Theory'
         ]
       }
     ]
@@ -59,143 +69,107 @@ const syllabus = [
       {
         title: 'Boolean Algebra',
         topics: [
-          'Boolean laws and identities',
-          'De Morgan’s theorem',
-          'Canonical forms (SOP/POS)',
-          'Logic simplification',
-          'Boolean functions'
+          'Boolean Laws and Identities',
+          'Canonical Forms',
+          'Boolean Function Simplification',
+          'Duality Principle',
+          'De Morgan\'s Theorems'
         ]
       },
       {
         title: 'Combinational Circuits',
         topics: [
-          'Adders and subtractors',
-          'Multiplexers and demultiplexers',
-          'Encoders and decoders',
-          'Code converters',
+          'Adders and Subtractors',
+          'Multiplexers',
+          'Demultiplexers',
+          'Encoders and Decoders',
           'Comparators'
         ]
       },
       {
         title: 'Sequential Circuits',
         topics: [
-          'Flip flops (SR, JK, D, T)',
-          'Registers',
-          'Counters',
-          'State machines',
-          'Timing diagrams'
+          'SR Flip-Flop',
+          'JK Flip-Flop',
+          'D Flip-Flop',
+          'T Flip-Flop',
+          'State Diagrams'
         ]
       },
       {
-        title: 'Number Systems',
+        title: 'Minimization Techniques',
         topics: [
-          'Binary arithmetic',
-          'Signed number representation',
-          'Floating point representation',
-          'Gray code',
-          'BCD code'
+          'Karnaugh Maps',
+          'Quine-McCluskey Method',
+          'Prime Implicants',
+          'Essential Prime Implicants',
+          'Don\'t Care Conditions'
+        ]
+      },
+      {
+        title: 'Registers and Counters',
+        topics: [
+          'Shift Registers',
+          'Ring Counters',
+          'Johnson Counters',
+          'Asynchronous Counters',
+          'Synchronous Counters'
         ]
       }
     ]
   },
   {
-    name: 'Computer Organization and Architecture (COA)',
+    name: 'Computer Organization and Architecture',
     color: '#60A5FA',
     chapters: [
       {
-        title: 'Instruction Set Architecture',
+        title: 'Basic Computer Organization',
         topics: [
-          'Instruction formats',
-          'Addressing modes',
-          'Instruction cycle',
-          'RISC vs CISC',
-          'Instruction pipelining basics'
+          'Instruction Execution Cycle',
+          'Bus Structures',
+          'Control Unit',
+          'Register Organization',
+          'Instruction Formats'
         ]
       },
       {
-        title: 'CPU Organization',
+        title: 'Arithmetic and Logic Unit',
         topics: [
-          'ALU design',
-          'Control unit (hardwired vs microprogrammed)',
-          'Register organization',
-          'Data path design',
-          'Microoperations'
+          'Integer Arithmetic',
+          'Floating Point Arithmetic',
+          'Arithmetic Circuits',
+          'Logic Operations',
+          'ALU Design'
         ]
       },
       {
         title: 'Memory Organization',
         topics: [
-          'Cache memory',
-          'Virtual memory',
-          'Memory hierarchy',
-          'Associative memory',
-          'Paging and segmentation'
+          'Cache Memory',
+          'Virtual Memory',
+          'Memory Hierarchy',
+          'Associative Memory',
+          'Memory Mapping'
         ]
       },
       {
-        title: 'I/O Organization',
+        title: 'Input Output Organization',
         topics: [
-          'Interrupts',
-          'DMA',
           'Programmed I/O',
-          'I/O addressing',
-          'Bus architecture'
-        ]
-      }
-    ]
-  },
-  {
-    name: 'Algorithms',
-    color: '#8B5CF6',
-    chapters: [
-      {
-        title: 'Algorithm Analysis',
-        topics: [
-          'Time complexity',
-          'Space complexity',
-          'Big-O, Big-Theta, Big-Omega',
-          'Recurrence relations',
-          'Master theorem'
+          'Interrupt Driven I/O',
+          'Direct Memory Access',
+          'I/O Interfaces',
+          'I/O Addressing'
         ]
       },
       {
-        title: 'Divide and Conquer',
+        title: 'Pipelining and Parallelism',
         topics: [
-          'Merge sort',
-          'Quick sort',
-          'Binary search',
-          'Strassen matrix multiplication',
-          'Closest pair problem'
-        ]
-      },
-      {
-        title: 'Greedy Algorithms',
-        topics: [
-          'Activity selection',
-          'Huffman coding',
-          'Kruskal algorithm',
-          'Prim algorithm',
-          'Job sequencing'
-        ]
-      },
-      {
-        title: 'Dynamic Programming',
-        topics: [
-          'Knapsack problem',
-          'Longest common subsequence',
-          'Matrix chain multiplication',
-          'Optimal BST',
-          'Coin change'
-        ]
-      },
-      {
-        title: 'Graph Algorithms',
-        topics: [
-          'BFS and DFS',
-          'Shortest path (Dijkstra)',
-          'Bellman Ford',
-          'Topological sorting',
-          'Floyd Warshall'
+          'Instruction Pipelining',
+          'Pipeline Hazards',
+          'Superscalar Architecture',
+          'Vector Processing',
+          'Multiprocessor Systems'
         ]
       }
     ]
@@ -205,43 +179,53 @@ const syllabus = [
     color: '#EC4899',
     chapters: [
       {
-        title: 'Regular Languages',
+        title: 'Finite Automata',
         topics: [
-          'Finite automata',
-          'NFA vs DFA',
-          'Regular expressions',
-          'Conversion (RE → NFA → DFA)',
-          'Pumping lemma'
+          'Deterministic Finite Automata',
+          'Non-deterministic Finite Automata',
+          'Regular Languages',
+          'Regular Expressions',
+          'DFA Minimization'
         ]
       },
       {
-        title: 'Context Free Languages',
+        title: 'Context Free Grammars',
         topics: [
-          'Context free grammars',
-          'Pushdown automata',
-          'Parse trees',
-          'Ambiguous grammars',
-          'CNF and GNF'
+          'Grammar Rules',
+          'Derivations and Parse Trees',
+          'Ambiguous Grammars',
+          'Chomsky Normal Form',
+          'Greibach Normal Form'
+        ]
+      },
+      {
+        title: 'Pushdown Automata',
+        topics: [
+          'Definition of PDA',
+          'Acceptance by Final State',
+          'Acceptance by Empty Stack',
+          'Design of PDA',
+          'Equivalence with CFG'
         ]
       },
       {
         title: 'Turing Machines',
         topics: [
-          'Basic TM model',
-          'Multi-tape Turing machine',
-          'Universal TM',
-          'TM as language recognizer',
-          'Church Turing thesis'
+          'Basic Turing Machine Model',
+          'Multi-tape Turing Machines',
+          'Universal Turing Machine',
+          'Turing Machine Design',
+          'Church-Turing Thesis'
         ]
       },
       {
-        title: 'Computability',
+        title: 'Computability and Complexity',
         topics: [
-          'Decidable problems',
-          'Undecidable problems',
-          'Halting problem',
-          'Reducibility',
-          'Recursive vs recursively enumerable languages'
+          'Decidable Languages',
+          'Undecidable Problems',
+          'Reduction Techniques',
+          'P vs NP',
+          'NP-Complete Problems'
         ]
       }
     ]
@@ -253,67 +237,77 @@ const syllabus = [
       {
         title: 'Lexical Analysis',
         topics: [
-          'Tokens and lexemes',
-          'Finite automata in lexical analysis',
-          'Regular expressions',
-          'Symbol table',
-          'Lex tools'
+          'Token and Lexeme',
+          'Regular Expressions',
+          'Finite Automata for Token Recognition',
+          'Lexical Errors',
+          'Symbol Table Basics'
         ]
       },
       {
         title: 'Syntax Analysis',
         topics: [
-          'Context free grammar',
-          'LL parsing',
-          'LR parsing',
-          'Parse trees',
-          'Ambiguity'
+          'Context Free Grammars',
+          'Parse Trees',
+          'Top Down Parsing',
+          'Bottom Up Parsing',
+          'LR Parsing'
         ]
       },
       {
         title: 'Semantic Analysis',
         topics: [
-          'Syntax directed translation',
-          'Type checking',
-          'Attribute grammars',
-          'Intermediate code generation',
-          'Error handling'
+          'Syntax Directed Translation',
+          'Type Checking',
+          'Scope and Binding',
+          'Attribute Grammars',
+          'Semantic Errors'
         ]
       },
       {
-        title: 'Code Optimization',
+        title: 'Intermediate Code Generation',
         topics: [
-          'Peephole optimization',
-          'Loop optimization',
-          'Dead code elimination',
-          'Constant folding',
-          'Register allocation'
+          'Three Address Code',
+          'Syntax Trees',
+          'Directed Acyclic Graph',
+          'Intermediate Representation',
+          'Control Flow Graph'
+        ]
+      },
+      {
+        title: 'Code Optimization and Generation',
+        topics: [
+          'Loop Optimization',
+          'Dead Code Elimination',
+          'Register Allocation',
+          'Instruction Selection',
+          'Target Code Generation'
         ]
       }
     ]
   },
   {
-    name: 'Operating Systems',
+    name: 'Operating System',
     color: '#34D399',
     chapters: [
       {
         title: 'Process Management',
         topics: [
-          'Process vs thread',
-          'Process scheduling',
-          'Context switching',
-          'Scheduling algorithms',
-          'Interprocess communication'
+          'Process States',
+          'Process Control Block',
+          'Context Switching',
+          'Interprocess Communication',
+          'Threads'
         ]
       },
       {
-        title: 'Deadlocks',
+        title: 'CPU Scheduling',
         topics: [
-          'Deadlock conditions',
-          'Deadlock prevention',
-          'Deadlock avoidance',
-          'Banker’s algorithm',
-          'Deadlock detection'
+          'First Come First Serve',
+          'Shortest Job First',
+          'Priority Scheduling',
+          'Round Robin',
+          'Multilevel Queue Scheduling'
         ]
       },
       {
@@ -321,19 +315,29 @@ const syllabus = [
         topics: [
           'Paging',
           'Segmentation',
-          'Page replacement algorithms',
-          'Thrashing',
-          'Virtual memory'
+          'Virtual Memory',
+          'Page Replacement Algorithms',
+          'Thrashing'
+        ]
+      },
+      {
+        title: 'Deadlocks',
+        topics: [
+          'Deadlock Conditions',
+          'Deadlock Prevention',
+          'Deadlock Avoidance',
+          'Banker\'s Algorithm',
+          'Deadlock Detection and Recovery'
         ]
       },
       {
         title: 'File Systems',
         topics: [
-          'File allocation methods',
-          'Directory structures',
-          'Disk scheduling',
-          'File protection',
-          'Journaling'
+          'File Allocation Methods',
+          'Directory Structures',
+          'File Access Methods',
+          'Disk Scheduling',
+          'File Protection'
         ]
       }
     ]
@@ -343,43 +347,53 @@ const syllabus = [
     color: '#3B82F6',
     chapters: [
       {
+        title: 'Database Fundamentals',
+        topics: [
+          'Database Architecture',
+          'Data Models',
+          'Three Schema Architecture',
+          'Database Languages',
+          'Data Independence'
+        ]
+      },
+      {
         title: 'Relational Model',
         topics: [
-          'Keys',
-          'Relational algebra',
-          'Relational calculus',
-          'Integrity constraints',
-          'Schema design'
+          'Relations and Tuples',
+          'Keys and Constraints',
+          'Relational Algebra',
+          'Relational Calculus',
+          'Views'
         ]
       },
       {
         title: 'SQL',
         topics: [
+          'DDL Commands',
+          'DML Commands',
           'Joins',
-          'Nested queries',
-          'Aggregation',
-          'Views',
-          'Transactions'
+          'Aggregate Functions',
+          'Subqueries'
         ]
       },
       {
         title: 'Normalization',
         topics: [
-          'Functional dependencies',
-          '1NF, 2NF, 3NF',
-          'BCNF',
-          'Lossless decomposition',
-          'Dependency preservation'
+          'Functional Dependencies',
+          'First Normal Form',
+          'Second Normal Form',
+          'Third Normal Form',
+          'Boyce-Codd Normal Form'
         ]
       },
       {
-        title: 'Transactions',
+        title: 'Transaction Management',
         topics: [
-          'ACID properties',
-          'Concurrency control',
+          'ACID Properties',
+          'Concurrency Control',
+          'Locking Protocols',
           'Serializability',
-          'Locking protocols',
-          'Deadlocks'
+          'Recovery Techniques'
         ]
       }
     ]
@@ -389,43 +403,53 @@ const syllabus = [
     color: '#06B6D4',
     chapters: [
       {
-        title: 'Network Layers',
+        title: 'Network Fundamentals',
         topics: [
-          'OSI model',
-          'TCP/IP model',
-          'Encapsulation',
-          'Protocol layering',
-          'Services'
+          'Network Types',
+          'OSI Model',
+          'TCP/IP Model',
+          'Network Topologies',
+          'Transmission Media'
         ]
       },
       {
         title: 'Data Link Layer',
         topics: [
-          'Error detection (CRC)',
-          'Flow control',
-          'ARQ protocols',
-          'Framing',
-          'MAC protocols'
+          'Error Detection',
+          'Error Correction',
+          'Flow Control',
+          'Sliding Window Protocol',
+          'MAC Protocols'
         ]
       },
       {
         title: 'Network Layer',
         topics: [
-          'IP addressing',
+          'IP Addressing',
           'Subnetting',
-          'Routing algorithms',
-          'Distance vector routing',
-          'Link state routing'
+          'Routing Algorithms',
+          'IPv4 and IPv6',
+          'ICMP'
         ]
       },
       {
         title: 'Transport Layer',
         topics: [
-          'TCP vs UDP',
-          'Congestion control',
-          'Flow control',
-          'Sliding window protocol',
-          'Reliable data transfer'
+          'TCP Protocol',
+          'UDP Protocol',
+          'Congestion Control',
+          'Flow Control',
+          'Connection Management'
+        ]
+      },
+      {
+        title: 'Application Layer',
+        topics: [
+          'HTTP',
+          'FTP',
+          'DNS',
+          'SMTP',
+          'Network Security Basics'
         ]
       }
     ]
@@ -437,31 +461,51 @@ const syllabus = [
       {
         title: 'Quantitative Aptitude',
         topics: [
-          'Percentages',
-          'Profit and loss',
-          'Time and work',
-          'Time speed distance',
-          'Ratio and proportion'
+          'Percentage',
+          'Ratio and Proportion',
+          'Time and Work',
+          'Profit and Loss',
+          'Simple and Compound Interest'
         ]
       },
       {
         title: 'Logical Reasoning',
         topics: [
-          'Puzzles',
-          'Coding decoding',
-          'Blood relations',
-          'Series completion',
+          'Series Completion',
+          'Coding Decoding',
+          'Blood Relations',
+          'Direction Sense',
           'Syllogisms'
         ]
       },
       {
         title: 'Verbal Ability',
         topics: [
-          'Reading comprehension',
-          'Vocabulary',
-          'Sentence correction',
-          'Para jumbles',
-          'Grammar'
+          'Reading Comprehension',
+          'Sentence Correction',
+          'Synonyms and Antonyms',
+          'Para Jumbles',
+          'Fill in the Blanks'
+        ]
+      },
+      {
+        title: 'Data Interpretation',
+        topics: [
+          'Bar Graph Analysis',
+          'Pie Chart Analysis',
+          'Line Graph Analysis',
+          'Table Data Analysis',
+          'Caselet Interpretation'
+        ]
+      },
+      {
+        title: 'Analytical Ability',
+        topics: [
+          'Puzzles',
+          'Seating Arrangement',
+          'Logical Deductions',
+          'Critical Reasoning',
+          'Statement and Assumptions'
         ]
       }
     ]
@@ -512,7 +556,7 @@ const seedSyllabus = async () => {
       }
     }
 
-    console.log('✅ Syllabus subjects, chapters, and topics inserted for', email);
+    console.log('Syllabus subjects, chapters, and topics inserted for', email);
     process.exit(0);
   } catch (error) {
     console.error('Seed error:', error);

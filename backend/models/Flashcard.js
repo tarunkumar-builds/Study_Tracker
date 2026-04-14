@@ -68,37 +68,42 @@ const flashcardSchema = new mongoose.Schema({
 // Method to update card based on SM-2 algorithm
 flashcardSchema.methods.updateSpacedRepetition = function(quality) {
   // quality: 0-5 (0 = total blackout, 5 = perfect response)
-  
+  const reviewedAt = new Date();
+
   this.totalReviews += 1;
-  this.lastReviewDate = new Date();
-  
+  this.lastReviewDate = reviewedAt;
+
   if (quality >= 3) {
     this.correctReviews += 1;
-    
+
     if (this.repetitions === 0) {
-      this.interval = 1;
+      this.interval = quality >= 5 ? 3 : 1;
     } else if (this.repetitions === 1) {
-      this.interval = 6;
+      this.interval = quality >= 5 ? 8 : 6;
     } else {
-      this.interval = Math.round(this.interval * this.easeFactor);
+      const growthFactor = quality >= 5 ? this.easeFactor + 0.15 : this.easeFactor;
+      this.interval = Math.max(1, Math.round(this.interval * growthFactor));
     }
-    
+
     this.repetitions += 1;
+
+    // Successful reviews move the card out by whole-day intervals.
+    this.nextReviewDate = new Date(reviewedAt.getTime() + this.interval * 24 * 60 * 60 * 1000);
   } else {
     this.incorrectReviews += 1;
     this.repetitions = 0;
-    this.interval = 1;
+    this.interval = 0;
+
+    // Failed cards should reappear soon instead of disappearing for a full day.
+    this.nextReviewDate = new Date(reviewedAt.getTime() + 10 * 60 * 1000);
   }
-  
+
   // Update ease factor
   this.easeFactor = this.easeFactor + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
-  
+
   if (this.easeFactor < 1.3) {
     this.easeFactor = 1.3;
   }
-  
-  // Set next review date
-  this.nextReviewDate = new Date(Date.now() + this.interval * 24 * 60 * 60 * 1000);
 };
 
 // Static method to get due cards
@@ -111,8 +116,10 @@ flashcardSchema.statics.getDueCards = function(userId, subjectId = null) {
   if (subjectId) {
     query.subjectId = subjectId;
   }
-  
-  return this.find(query).populate('subjectId', 'name color');
+
+  return this.find(query)
+    .populate('subjectId', 'name color')
+    .sort({ nextReviewDate: 1, createdAt: 1 });
 };
 
 const Flashcard = mongoose.model('Flashcard', flashcardSchema);
