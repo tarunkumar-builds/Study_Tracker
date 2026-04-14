@@ -6,22 +6,10 @@ import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'rec
 import ProgressRing from '../components/ProgressRing';
 import ShareProgressCard from '../components/ShareProgressCard';
 import { useStudy } from '../context/StudyContext';
-import { pomodoroService, timetableService } from '../services';
+import { timetableService } from '../services';
+import { formatLocalDateInput, getDayName, getRecentDateKeys, parseDateInput } from '../utils/date';
 
 const subjectColors = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#06B6D4', '#14B8A6'];
-
-const buildRecentDates = () => {
-  const items = [];
-  for (let i = 6; i >= 0; i -= 1) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    items.push(`${year}-${month}-${day}`);
-  }
-  return items;
-};
 
 const formatTime = (minutes = 0) => {
   const total = Math.max(0, Math.round(Number(minutes) || 0));
@@ -32,23 +20,16 @@ const formatTime = (minutes = 0) => {
   return `${hh}:${mm}`;
 };
 
-const getDayName = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, { weekday: 'short' });
-};
-
 const Dashboard = () => {
   const { subjects, refreshSubjects, addSubject, dailyTimeline, refreshDailyTimeline } = useStudy();
-  const [dailyStats, setDailyStats] = useState({ totalMinutes: 0, sessionCount: 0 });
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(formatLocalDateInput());
   const [showAddModal, setShowAddModal] = useState(false);
   const [showTimetable, setShowTimetable] = useState(false);
   const [newSubject, setNewSubject] = useState({ name: '', color: '#3B82F6' });
-  const [loadingStats, setLoadingStats] = useState(true);
-  const [timetableDate, setTimetableDate] = useState(new Date().toISOString().split('T')[0]);
+  const [timetableDate, setTimetableDate] = useState(formatLocalDateInput());
   const [timetableSlots, setTimetableSlots] = useState([]);
 
-  const dates = useMemo(buildRecentDates, []);
+  const dates = useMemo(() => getRecentDateKeys(7), []);
   const dailyMap = useMemo(() => {
     const map = {};
     dailyTimeline.forEach((day) => {
@@ -64,6 +45,15 @@ const Dashboard = () => {
     }));
   }, [dailyTimeline]);
 
+  const selectedDay = useMemo(() => {
+    return dailyTimeline.find((day) => day.date === selectedDate) || {
+      date: selectedDate,
+      minutes: 0,
+      sessionCount: 0,
+      subjectBreakdown: []
+    };
+  }, [dailyTimeline, selectedDate]);
+
   useEffect(() => {
     const load = async () => {
       try {
@@ -75,21 +65,6 @@ const Dashboard = () => {
     };
     load();
   }, [dates, refreshDailyTimeline, refreshSubjects]);
-
-  useEffect(() => {
-    const loadStats = async () => {
-      setLoadingStats(true);
-      try {
-        const response = await pomodoroService.getDailyStats(selectedDate);
-        setDailyStats(response.data || { totalMinutes: 0, sessionCount: 0 });
-      } catch {
-        toast.error('Failed to load daily stats');
-      } finally {
-        setLoadingStats(false);
-      }
-    };
-    loadStats();
-  }, [selectedDate]);
 
   const averageCompletion = subjects.length
     ? Math.round(subjects.reduce((sum, subject) => sum + (subject.completionPercentage || 0), 0) / subjects.length)
@@ -189,7 +164,7 @@ const Dashboard = () => {
         </div>
         <div className="flex gap-2 overflow-x-auto custom-scrollbar pb-1">
           {dates.map((date) => {
-            const dateObj = new Date(date);
+            const dateObj = parseDateInput(date);
             const active = date === selectedDate;
             const dayMinutes = dailyMap[date] || 0;
             return (
@@ -219,9 +194,9 @@ const Dashboard = () => {
         <div className="card">
           <p className="text-gray-400 text-sm">Study Time ({selectedDate})</p>
           <p className="text-3xl font-bold text-white mt-1">
-            {loadingStats ? '...' : formatTime(dailyStats.totalMinutes)}
+            {formatTime(selectedDay.minutes)}
           </p>
-          <p className="text-xs text-gray-500 mt-1">{dailyStats.sessionCount || 0} focus sessions</p>
+          <p className="text-xs text-gray-500 mt-1">{selectedDay.sessionCount || 0} focus sessions</p>
         </div>
         <div className="card">
           <p className="text-gray-400 text-sm">Overall Completion</p>

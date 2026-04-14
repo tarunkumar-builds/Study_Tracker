@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Download, Share2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { pomodoroService } from '../services';
+import { formatLocalDateInput } from '../utils/date';
 
 const buildShareSvg = (subject) => {
   const chapters = subject?.chapters || [];
@@ -115,11 +116,7 @@ const ShareProgressCard = ({ subjects }) => {
     const loadToday = async () => {
       if (!selectedSubject) return;
       try {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        const response = await pomodoroService.getDailyStats(`${yyyy}-${mm}-${dd}`);
+        const response = await pomodoroService.getDailyStats(formatLocalDateInput());
         const breakdown = response.data?.subjectBreakdown || [];
         const match = breakdown.find((item) => item.name === selectedSubject.name);
         setTodayMinutes(match?.minutes || 0);

@@ -95,7 +95,9 @@ const getTimelineFromHistory = async (userId, startDate, endDate) => {
   const rows = await StudyHistory.find({
     userId,
     date: { $gte: start, $lte: end }
-  }).sort({ date: 1 }).lean();
+  })
+    .populate('subjects.subjectId', 'name color')
+    .sort({ date: 1 });
 
   const map = {};
   rows.forEach((row) => {
@@ -104,7 +106,13 @@ const getTimelineFromHistory = async (userId, startDate, endDate) => {
       date: key,
       minutes: row.totalFocusMinutes || 0,
       sessionCount: row.sessionCount || 0,
-      subjectBreakdown: row.subjects || []
+      subjectBreakdown: (row.subjects || []).map((subject) => ({
+        subjectId: subject.subjectId?._id || null,
+        name: subject.subjectId?.name || 'Subject',
+        color: subject.subjectId?.color || '#3B82F6',
+        minutes: subject.minutes || 0,
+        sessions: subject.sessions || 0
+      }))
     };
   });
 
@@ -173,6 +181,7 @@ export const createSession = async (req, res) => {
       duration: parsedDuration,
       type: type || 'focus',
       completed: completed !== undefined ? completed : true,
+      date: startTime || new Date(),
       startTime,
       endTime: endTime || new Date()
     });

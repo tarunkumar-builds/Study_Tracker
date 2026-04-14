@@ -5,7 +5,7 @@ import {
 } from 'recharts';
 import toast from 'react-hot-toast';
 import { pomodoroService } from '../services';
-import { useStudy } from '../context/StudyContext';
+import { formatLocalDateInput, getDayName } from '../utils/date';
 
 const palette = ['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#06B6D4', '#EC4899'];
 
@@ -18,15 +18,7 @@ const formatTime = (minutes = 0) => {
   return `${hh}:${mm}`;
 };
 
-const getDayName = (dateString) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString(undefined, { weekday: 'short' });
-};
-
 const Analytics = () => {
-  const { subjects, refreshSubjects } = useStudy();
-  const [weekly, setWeekly] = useState([]);
-  const [overall, setOverall] = useState({ subjectBreakdown: [] });
   const [timelineData, setTimelineData] = useState({ timeline: [], totalMinutes: 0, activeDays: 0, averageMinutes: 0, streak: 0 });
   const [rangeDays, setRangeDays] = useState(14);
   const [loading, setLoading] = useState(true);
@@ -35,22 +27,14 @@ const Analytics = () => {
     const load = async () => {
       setLoading(true);
       try {
-        await refreshSubjects();
-        const [weeklyRes, overallRes] = await Promise.all([
-          pomodoroService.getWeeklyStats(),
-          pomodoroService.getOverallStats()
-        ]);
-
         const endDate = new Date();
         const startDate = new Date();
         startDate.setDate(endDate.getDate() - (rangeDays - 1));
         const rangeRes = await pomodoroService.getRangeStats(
-          startDate.toISOString().split('T')[0],
-          endDate.toISOString().split('T')[0]
+          formatLocalDateInput(startDate),
+          formatLocalDateInput(endDate)
         );
 
-        setWeekly(weeklyRes.data || []);
-        setOverall(overallRes.data || { subjectBreakdown: [] });
         setTimelineData(rangeRes.data || { timeline: [], totalMinutes: 0, activeDays: 0, averageMinutes: 0, streak: 0 });
       } catch {
         toast.error('Failed to load analytics');
@@ -59,7 +43,7 @@ const Analytics = () => {
       }
     };
     load();
-  }, [rangeDays, refreshSubjects]);
+  }, [rangeDays]);
 
   const completionTrendData = useMemo(() => {
     const timeline = timelineData.timeline || [];
@@ -77,20 +61,35 @@ const Analytics = () => {
   }, [timelineData.timeline]);
 
   const weeklyChartData = useMemo(() => {
-    return (weekly || []).map((day) => ({
+    return (timelineData.timeline || []).slice(-7).map((day) => ({
       ...day,
       dayName: getDayName(day.date)
     }));
-  }, [weekly]);
+  }, [timelineData.timeline]);
 
   const subjectDistribution = useMemo(() => {
-    const breakdown = overall.subjectBreakdown || [];
-    return breakdown.map((item, index) => ({
+    const subjectMap = {};
+
+    (timelineData.timeline || []).forEach((day) => {
+      (day.subjectBreakdown || []).forEach((item) => {
+        const key = item.subjectId || item.name;
+        if (!subjectMap[key]) {
+          subjectMap[key] = {
+            name: item.name,
+            value: 0,
+            color: item.color
+          };
+        }
+        subjectMap[key].value += item.minutes || 0;
+      });
+    });
+
+    return Object.values(subjectMap).map((item, index) => ({
       name: item.name,
-      value: item.minutes,
-      color: palette[index % palette.length]
+      value: item.value,
+      color: item.color || palette[index % palette.length]
     }));
-  }, [overall.subjectBreakdown]);
+  }, [timelineData.timeline]);
 
   if (loading) {
     return (

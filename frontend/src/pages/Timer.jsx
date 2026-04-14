@@ -5,6 +5,7 @@ import TimerCircle from '../components/TimerCircle';
 import FocusMode from '../components/FocusMode';
 import { useStudy } from '../context/StudyContext';
 import { pomodoroService } from '../services';
+import { formatLocalDateInput } from '../utils/date';
 
 const DEFAULT_FOCUS_MINUTES = 25;
 const DEFAULT_BREAK_MINUTES = 5;
@@ -34,7 +35,7 @@ const Timer = () => {
   useEffect(() => {
     const loadTodayStats = async () => {
       try {
-        const response = await pomodoroService.getDailyStats(new Date().toISOString().split('T')[0]);
+        const response = await pomodoroService.getDailyStats(formatLocalDateInput());
         setTodayStats(response.data || { totalMinutes: 0, sessionCount: 0, subjectBreakdown: [] });
       } catch {
         // Silent fail: timer should still function even if stats request fails.
@@ -89,7 +90,7 @@ const Timer = () => {
   };
 
   const refreshTodayStats = async () => {
-    const daily = await pomodoroService.getDailyStats(new Date().toISOString().split('T')[0]);
+    const daily = await pomodoroService.getDailyStats(formatLocalDateInput());
     setTodayStats(daily.data || { totalMinutes: 0, sessionCount: 0, subjectBreakdown: [] });
   };
 

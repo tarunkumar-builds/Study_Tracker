@@ -105,7 +105,10 @@ export const StudyProvider = ({ children }) => {
   const addSession = async (payload) => {
     const response = await pomodoroService.createSession(payload);
     setSessions((prev) => [response.data, ...prev]);
-    await refreshSubjects();
+    await Promise.all([
+      refreshSubjects(),
+      refreshDailyTimeline()
+    ]);
     return response.data;
   };
 

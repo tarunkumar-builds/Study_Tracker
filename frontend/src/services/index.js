@@ -125,7 +125,7 @@ export const pomodoroService = {
     const params = {};
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
-    const response = await api.get('/sessions/range', { params });
+    const response = await api.get('/pomodoro/stats/range', { params });
     return response.data;
   },
 
@@ -133,7 +133,7 @@ export const pomodoroService = {
     const params = {};
     if (startDate) params.startDate = startDate;
     if (endDate) params.endDate = endDate;
-    const response = await api.get('/sessions/history', { params });
+    const response = await api.get('/pomodoro/stats/history', { params });
     return response.data;
   },
 
